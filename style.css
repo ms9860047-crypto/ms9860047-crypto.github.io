@@ -596,6 +596,124 @@ tbody tr:hover{
     font-weight:600;
 }
 
+.dashboard-date{
+    margin:-5px 0 13px;
+    color:var(--muted);
+    font-size:13px;
+    text-transform:capitalize;
+}
+
+.dashboard-periods{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+    margin-top:12px;
+}
+
+.dashboard-periods .report-item{
+    padding:12px 14px;
+}
+
+.period-profit{
+    color:var(--green-dark);
+    font-family:"Space Grotesk",sans-serif;
+    font-size:20px;
+}
+
+.flavors-overview{
+    margin-top:20px;
+}
+
+.flavors-overview h3{
+    margin:0 0 10px;
+}
+
+.flavor-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:12px;
+}
+
+.flavor-item{
+    min-width:0;
+    padding:14px;
+    border:1px solid #dfe8e3;
+    border-radius:8px;
+    background:linear-gradient(150deg,#fff,#f8fbf9);
+}
+
+.flavor-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+}
+
+.flavor-title h4{
+    min-width:0;
+    margin:0;
+    color:var(--ink);
+    font-family:"Space Grotesk",sans-serif;
+    font-size:16px;
+    overflow-wrap:anywhere;
+}
+
+.stock-badge{
+    flex:0 0 auto;
+    padding:5px 8px;
+    border-radius:999px;
+    color:#176b59;
+    background:#e9f5ef;
+    font-size:11px;
+    font-weight:700;
+}
+
+.stock-badge.is-empty{
+    color:#a8322c;
+    background:#fff0ee;
+}
+
+.flavor-recipe{
+    min-height:42px;
+    margin:12px 0;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.55;
+}
+
+.flavor-prices{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+    padding-top:10px;
+    border-top:1px solid #e5ece8;
+}
+
+.flavor-prices span{
+    min-width:0;
+}
+
+.flavor-prices small{
+    display:block;
+    margin-bottom:4px;
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.35;
+}
+
+.flavor-prices strong{
+    color:var(--ink);
+    font-family:"Space Grotesk",sans-serif;
+    font-size:16px;
+}
+
+.flavor-note,
+.empty-state{
+    margin:10px 0 0;
+    color:var(--muted);
+    font-size:12px;
+}
+
 .dashboard-alerts{
     margin-top:16px;
 }
@@ -714,6 +832,11 @@ li{
     .metric-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
         gap:8px;
+    }
+
+    .dashboard-periods,
+    .flavor-grid{
+        grid-template-columns:minmax(0,1fr);
     }
 
     .metric-item{
