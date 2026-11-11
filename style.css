@@ -264,3 +264,482 @@ li .actions{
         padding:8px;
     }
 }
+
+:root{
+    --ink:#1d302d;
+    --muted:#667772;
+    --line:#d8e2de;
+    --canvas:#edf3f0;
+    --surface:#ffffff;
+    --green:#176b59;
+    --green-dark:#124f43;
+    --teal:#138b83;
+    --orange:#b76935;
+    --red:#b23b35;
+}
+
+*{
+    font-family:"DM Sans",sans-serif;
+    letter-spacing:0;
+}
+
+body{
+    min-height:100vh;
+    padding:0 0 36px;
+    color:var(--ink);
+    background-color:var(--canvas);
+    background-image:
+        linear-gradient(135deg,rgba(23,107,89,.035) 25%,transparent 25%),
+        linear-gradient(225deg,rgba(23,107,89,.025) 25%,transparent 25%);
+    background-position:0 0,16px 16px;
+    background-size:32px 32px;
+}
+
+header{
+    margin:0;
+    padding:22px 24px 44px;
+    color:#f7fbf9;
+    background:linear-gradient(112deg,#123f38 0%,#176b59 68%,#1d7d6b 100%);
+    box-shadow:0 8px 26px rgba(18,79,67,.16);
+}
+
+.header-content{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    max-width:1320px;
+    margin:0 auto;
+}
+
+.brand-mark{
+    display:grid;
+    width:48px;
+    height:48px;
+    flex:0 0 48px;
+    place-items:center;
+    border:1px solid rgba(255,255,255,.28);
+    border-radius:12px;
+    color:#f2bd79;
+    background:rgba(255,255,255,.09);
+    font-size:26px;
+}
+
+header h1{
+    color:#fff;
+    font-family:"Space Grotesk",sans-serif;
+    font-size:27px;
+    font-weight:700;
+}
+
+header p{
+    margin-top:3px;
+    color:rgba(247,251,249,.76);
+    font-size:14px;
+}
+
+.header-label{
+    margin-left:auto;
+    padding:7px 10px;
+    border:1px solid rgba(255,255,255,.22);
+    border-radius:6px;
+    color:rgba(247,251,249,.88);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+}
+
+.container{
+    display:grid;
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    gap:16px;
+    max-width:1320px;
+    margin:-22px auto 0;
+    padding:0 24px;
+    align-items:start;
+}
+
+.card{
+    min-width:0;
+    margin:0;
+    padding:20px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:var(--surface);
+    box-shadow:0 5px 18px rgba(27,48,45,.055);
+}
+
+.wide-card{
+    grid-column:1/-1;
+}
+
+.inventory-card,
+.expenses-card,
+.flavors-card,
+.recipes-card,
+.pricing-card,
+.sales-card{
+    grid-column:span 6;
+}
+
+.dashboard-card{
+    border-top:3px solid var(--teal);
+}
+
+.cloud-card{
+    border-top:3px solid var(--green);
+}
+
+.card h2{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:14px;
+    padding-bottom:12px;
+    border-bottom:1px solid #e8eeeb;
+    color:var(--ink);
+    font-family:"Space Grotesk",sans-serif;
+    font-size:18px;
+    font-weight:600;
+    line-height:1.35;
+}
+
+.card h3{
+    margin:16px 0 8px;
+    color:#304743;
+    font-family:"Space Grotesk",sans-serif;
+    font-size:14px;
+    font-weight:600;
+}
+
+.hint{
+    color:var(--muted);
+    font-size:13px;
+}
+
+input,
+select{
+    min-width:0;
+    min-height:42px;
+    margin:0;
+    padding:10px 12px;
+    border:1px solid #cad7d2;
+    border-radius:6px;
+    color:var(--ink);
+    background:#fff;
+    font-size:14px;
+    transition:border-color .15s ease,box-shadow .15s ease;
+}
+
+input::placeholder{
+    color:#84928d;
+}
+
+input:focus,
+select:focus{
+    outline:none;
+    border-color:var(--teal);
+    box-shadow:0 0 0 3px rgba(19,139,131,.14);
+}
+
+.form-grid{
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:9px;
+}
+
+.form-grid label{
+    display:flex;
+    align-items:center;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:600;
+}
+
+button,
+.file-button{
+    min-height:40px;
+    margin-top:10px;
+    padding:10px 14px;
+    border:1px solid transparent;
+    border-radius:6px;
+    color:#fff;
+    background:var(--green);
+    font-size:13px;
+    font-weight:600;
+    transition:background .15s ease,border-color .15s ease,transform .15s ease;
+}
+
+button:hover,
+.file-button:hover{
+    background:var(--green-dark);
+}
+
+button:focus-visible,
+.file-button:focus-visible{
+    outline:3px solid rgba(19,139,131,.3);
+    outline-offset:2px;
+}
+
+.form-actions{
+    align-items:stretch;
+    gap:9px;
+    margin-top:4px;
+}
+
+.form-actions button,
+.form-actions .file-button{
+    margin-top:6px;
+}
+
+.secondary-button,
+.file-button{
+    color:#36534c;
+    border-color:#cddbd5;
+    background:#f3f7f5;
+}
+
+.secondary-button:hover,
+.file-button:hover{
+    color:#244139;
+    border-color:#afc5bb;
+    background:#e9f1ed;
+}
+
+.danger-button,
+.danger-button:hover{
+    color:#a8322c;
+    border-color:#f0d2cf;
+    background:#fff5f4;
+}
+
+.danger-button:hover{
+    background:#fde9e7;
+}
+
+.small-button{
+    min-height:32px;
+    padding:6px 9px;
+    font-size:12px;
+}
+
+table{
+    margin-top:12px;
+    border-collapse:separate;
+    border-spacing:0;
+    color:#344944;
+    font-size:13px;
+}
+
+th,
+td{
+    padding:10px 11px;
+    border:0;
+    border-bottom:1px solid #e5ece8;
+    text-align:left;
+}
+
+th{
+    color:#48615a;
+    background:#f0f5f2;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+tbody tr:nth-child(even){
+    background:#fafcfb;
+}
+
+tbody tr:hover{
+    background:#f1f7f4;
+}
+
+.metric-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+}
+
+.metric-item{
+    min-height:94px;
+    padding:15px 16px;
+    border:1px solid #e1e9e5;
+    border-top:3px solid var(--teal);
+    border-radius:7px;
+    background:linear-gradient(145deg,#fff,#f8fbf9);
+}
+
+.metric-item:nth-child(2){border-top-color:var(--green)}
+.metric-item:nth-child(3){border-top-color:var(--orange)}
+.metric-item:nth-child(4){border-top-color:#547a9c}
+
+.metric-item p{
+    margin:0 0 10px;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:600;
+}
+
+.metric-item strong{
+    color:var(--ink);
+    font-family:"Space Grotesk",sans-serif;
+    font-size:21px;
+    font-weight:600;
+}
+
+.dashboard-alerts{
+    margin-top:16px;
+}
+
+.dashboard-alerts h3{
+    margin:0 0 8px;
+}
+
+.alert-item,
+.all-clear{
+    padding:10px 12px;
+    border:1px solid #f0d2cf;
+    border-left:4px solid var(--red);
+    border-radius:5px;
+    color:#823a35;
+    background:#fff7f6;
+    font-size:13px;
+}
+
+.all-clear{
+    border-color:#d6e8df;
+    border-left-color:var(--green);
+    color:#326451;
+    background:#f3faf6;
+}
+
+.file-button{
+    display:flex;
+    flex:1;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    cursor:pointer;
+}
+
+.report-item{
+    border:1px solid #dfe8e3;
+    border-left:4px solid var(--green);
+    border-radius:6px;
+    background:#f8fbf9;
+}
+
+.net-profit{
+    color:var(--green-dark);
+}
+
+#ventasInfo{
+    padding:10px 12px;
+    border:1px solid #e0e9e5;
+    border-radius:6px;
+    color:var(--green-dark);
+    background:#f4f8f6;
+    font-size:13px;
+    font-weight:600;
+}
+
+ul{
+    padding:0;
+    list-style:none;
+}
+
+li{
+    padding:10px 0;
+    border-bottom:1px solid #e8eeeb;
+}
+
+@media(max-width:900px){
+    .inventory-card,
+    .expenses-card,
+    .flavors-card,
+    .recipes-card,
+    .pricing-card,
+    .sales-card{
+        grid-column:span 6;
+    }
+
+    .metric-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+}
+
+@media(max-width:680px){
+    header{
+        padding:18px 16px 38px;
+    }
+
+    .container{
+        grid-template-columns:minmax(0,1fr);
+        gap:12px;
+        margin-top:-18px;
+        padding:0 12px;
+    }
+
+    .wide-card,
+    .inventory-card,
+    .expenses-card,
+    .flavors-card,
+    .recipes-card,
+    .pricing-card,
+    .sales-card{
+        grid-column:1/-1;
+    }
+
+    .card{
+        padding:16px;
+    }
+
+    .header-label{
+        display:none;
+    }
+
+    .form-grid{
+        grid-template-columns:minmax(0,1fr);
+    }
+
+    .metric-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+    }
+
+    .metric-item{
+        min-height:86px;
+        padding:12px;
+    }
+
+    .metric-item strong{
+        font-size:18px;
+    }
+
+    table{
+        font-size:12px;
+    }
+
+    th,
+    td{
+        padding:8px;
+    }
+}
+
+@media(max-width:380px){
+    .brand-mark{
+        width:42px;
+        height:42px;
+        flex-basis:42px;
+    }
+
+    header h1{
+        font-size:23px;
+    }
+
+    .metric-grid{
+        grid-template-columns:minmax(0,1fr);
+    }
+
+    .form-actions{
+        flex-direction:column;
+    }
+}
