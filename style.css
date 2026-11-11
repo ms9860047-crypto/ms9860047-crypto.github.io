@@ -311,17 +311,28 @@ header{
     margin:0 auto;
 }
 
-.brand-mark{
+.brand-logo{
     display:grid;
-    width:48px;
-    height:48px;
-    flex:0 0 48px;
-    place-items:center;
-    border:1px solid rgba(255,255,255,.28);
-    border-radius:12px;
-    color:#f2bd79;
-    background:rgba(255,255,255,.09);
-    font-size:26px;
+    width:96px;
+    height:96px;
+    flex:0 0 96px;
+    object-fit:cover;
+    border:3px solid rgba(255,255,255,.82);
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 5px 16px rgba(8,28,47,.24);
+}
+
+.visually-hidden{
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0;
 }
 
 header h1{
@@ -725,10 +736,10 @@ li{
 }
 
 @media(max-width:380px){
-    .brand-mark{
-        width:42px;
-        height:42px;
-        flex-basis:42px;
+    .brand-logo{
+        width:70px;
+        height:70px;
+        flex-basis:70px;
     }
 
     header h1{
