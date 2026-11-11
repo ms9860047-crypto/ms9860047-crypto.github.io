@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiJen Frozen</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>❄ MiJen Frozen</h1>
+    <p>Control de Costos, Stock y Ganancias</p>
+</header>
+
+<div class="container">
+
+    <section class="card cloud-card">
+        <h2>☁️ Cuenta y sincronización</h2>
+        <p id="estadoNube" class="hint" aria-live="polite">Preparando sincronización en la nube...</p>
+        <div id="formularioNube" hidden>
+            <div class="form-grid">
+                <input type="email" id="correoNube" autocomplete="email" placeholder="Correo electrónico">
+                <input type="password" id="claveNube" autocomplete="current-password" placeholder="Contraseña (mínimo 6 caracteres)">
+            </div>
+            <div class="form-actions">
+                <button onclick="iniciarSesionNube()">Iniciar sesión</button>
+                <button class="secondary-button" onclick="crearCuentaNube()">Crear cuenta</button>
+            </div>
+        </div>
+        <button id="cerrarSesionNubeBtn" class="secondary-button" onclick="cerrarSesionNube()" hidden>Cerrar sesión</button>
+        <p class="hint">Usa la misma cuenta en todos tus dispositivos para ver los mismos datos.</p>
+    </section>
+
+    <section class="card">
+        <h2>📦 Inventario</h2>
+
+        <div class="form-grid">
+            <input type="text" id="nombreInsumo" placeholder="Nombre del insumo">
+            <input type="number" id="cantidadInsumo" min="0.01" step="any" placeholder="Cantidad en stock">
+            <input type="text" id="unidadInsumo" placeholder="Unidad (g, ml, unidad)">
+            <input type="number" id="precioInsumo" min="0" step="0.01" placeholder="Costo total del stock">
+        </div>
+        <div class="form-actions">
+            <button id="guardarInsumoBtn" onclick="guardarInsumo()">Agregar Insumo</button>
+            <button class="secondary-button" id="cancelarInsumoBtn" onclick="cancelarEdicion('inventario')" hidden>Cancelar</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Insumo</th>
+                    <th>Cantidad</th>
+                    <th>Unidad</th>
+                    <th>Costo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaInventario"></tbody>
+        </table>
+    </section>
+
+    <section class="card">
+        <h2>🧾 Gastos operativos</h2>
+        <div class="form-grid">
+            <input type="text" id="nombreGasto" placeholder="Concepto (luz, agua, transporte...)">
+            <input type="number" id="montoGasto" min="0" step="0.01" placeholder="Monto (S/)">
+            <input type="date" id="fechaGasto" aria-label="Fecha del gasto">
+        </div>
+        <div class="form-actions">
+            <button id="guardarGastoBtn" onclick="guardarGasto()">Registrar Gasto</button>
+            <button class="secondary-button" id="cancelarGastoBtn" onclick="cancelarEdicion('gastos')" hidden>Cancelar</button>
+        </div>
+        <table>
+            <thead><tr><th>Concepto</th><th>Fecha</th><th>Monto</th><th>Acciones</th></tr></thead>
+            <tbody id="tablaGastos"></tbody>
+        </table>
+    </section>
+
+    <section class="card">
+        <h2>🍓 Gestión de Sabores</h2>
+
+        <input type="text" id="nuevoSabor" placeholder="Nombre del sabor">
+        <button onclick="agregarSabor()">
+            Agregar Sabor
+        </button>
+        <ul id="listaSabores"></ul>
+    </section>
+
+    <section class="card">
+        <h2>🧪 Recetas por unidad</h2>
+        <p class="hint">Indica cuánto de cada insumo se usa para preparar un marciano. Usa la misma unidad del inventario.</p>
+        <div class="form-grid">
+            <select id="saborReceta" aria-label="Sabor de la receta"></select>
+            <select id="insumoReceta" aria-label="Insumo de la receta"></select>
+            <input type="number" id="cantidadReceta" min="0.001" step="any" placeholder="Cantidad por unidad">
+        </div>
+        <div class="form-actions">
+            <button id="guardarRecetaBtn" onclick="guardarReceta()">Agregar a receta</button>
+            <button class="secondary-button" id="cancelarRecetaBtn" onclick="cancelarEdicion('recetas')" hidden>Cancelar</button>
+        </div>
+        <table>
+            <thead><tr><th>Sabor</th><th>Insumo</th><th>Cantidad por unidad</th><th>Acciones</th></tr></thead>
+            <tbody id="tablaRecetas"></tbody>
+        </table>
+    </section>
+
+    <section class="card">
+        <h2>🏭 Producción</h2>
+        <div class="form-grid">
+            <select id="saborProduccion" aria-label="Sabor producido"></select>
+            <input type="number" id="cantidadProducida" min="1" step="1" placeholder="Unidades producidas">
+            <input type="date" id="fechaProduccion" aria-label="Fecha de producción">
+        </div>
+        <div class="form-actions">
+            <button id="guardarProduccionBtn" onclick="guardarProduccion()">Registrar Producción</button>
+            <button class="secondary-button" id="cancelarProduccionBtn" onclick="cancelarEdicion('producciones')" hidden>Cancelar</button>
+        </div>
+        <h3>Stock de producto terminado</h3>
+        <table>
+            <thead><tr><th>Sabor</th><th>Producidos</th><th>Vendidos</th><th>Disponibles</th></tr></thead>
+            <tbody id="tablaStockProductos"></tbody>
+        </table>
+        <h3>Historial de producción</h3>
+        <table>
+            <thead><tr><th>Fecha</th><th>Sabor</th><th>Unidades</th><th>Costo total</th><th>Acciones</th></tr></thead>
+            <tbody id="tablaProduccion"></tbody>
+        </table>
+    </section>
+
+    <section class="card">
+        <h2>🧮 Calculadora</h2>
+
+        <input type="number"
+               id="costoIngredientes"
+               placeholder="Costo total ingredientes">
+
+        <input type="number"
+               id="cantidadMarcianos"
+               placeholder="Cantidad de marcianos">
+
+        <button onclick="calcularCostos()">
+            Calcular
+        </button>
+
+        <div id="resultado"></div>
+
+    </section>
+
+    <section class="card">
+        <h2>💰 Registro de Ventas</h2>
+        <div class="form-grid">
+            <select id="saborVenta" aria-label="Sabor vendido"></select>
+            <input type="number" id="ventaCantidad" min="1" step="1" placeholder="Cantidad vendida">
+            <input type="number" id="ventaPrecio" min="0" step="0.01" placeholder="Precio por unidad (S/)">
+            <input type="date" id="fechaVenta" aria-label="Fecha de venta">
+        </div>
+        <div class="form-actions">
+            <button id="guardarVentaBtn" onclick="registrarVenta()">Registrar Venta</button>
+            <button class="secondary-button" id="cancelarVentaBtn" onclick="cancelarEdicion('ventas')" hidden>Cancelar</button>
+        </div>
+        <div id="ventasInfo"></div>
+        <table>
+            <thead><tr><th>Fecha</th><th>Sabor</th><th>Unidades</th><th>Ingreso</th><th>Costo</th><th>Ganancia</th><th>Acciones</th></tr></thead>
+            <tbody id="tablaVentas"></tbody>
+        </table>
+    </section>
+
+    <section class="card">
+        <h2>📈 Ganancia neta</h2>
+        <p class="hint">Ganancia = ventas - costo de los productos vendidos - gastos operativos registrados.</p>
+        <div id="gananciasInfo" class="report-grid"></div>
+    </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
