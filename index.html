@@ -34,6 +34,26 @@
         <p class="hint">Usa la misma cuenta en todos tus dispositivos para ver los mismos datos.</p>
     </section>
 
+    <section class="card dashboard-card">
+        <h2>📊 Dashboard</h2>
+        <div id="dashboardInfo" class="metric-grid"></div>
+        <div class="dashboard-alerts">
+            <h3>Alertas de inventario</h3>
+            <div id="alertasInventario" class="alerts-list" aria-live="polite"></div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>💾 Respaldo de datos</h2>
+        <p class="hint">Descarga una copia JSON o importa una copia para reemplazar los datos actuales.</p>
+        <div class="form-actions">
+            <button onclick="exportarRespaldo()">Descargar respaldo</button>
+            <label class="button file-button" for="archivoRespaldo">Importar respaldo</label>
+            <input id="archivoRespaldo" type="file" accept="application/json,.json" hidden onchange="importarRespaldo(event)">
+        </div>
+        <p id="estadoRespaldo" class="hint" aria-live="polite"></p>
+    </section>
+
     <section class="card">
         <h2>📦 Inventario</h2>
 
@@ -42,6 +62,7 @@
             <input type="number" id="cantidadInsumo" min="0.01" step="any" placeholder="Cantidad en stock">
             <input type="text" id="unidadInsumo" placeholder="Unidad (g, ml, unidad)">
             <input type="number" id="precioInsumo" min="0" step="0.01" placeholder="Costo total del stock">
+            <input type="number" id="stockMinimo" min="0" step="any" placeholder="Alerta si baja de">
         </div>
         <div class="form-actions">
             <button id="guardarInsumoBtn" onclick="guardarInsumo()">Agregar Insumo</button>
@@ -55,6 +76,7 @@
                     <th>Cantidad</th>
                     <th>Unidad</th>
                     <th>Costo</th>
+                    <th>Mínimo</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -132,22 +154,16 @@
     </section>
 
     <section class="card">
-        <h2>🧮 Calculadora</h2>
-
-        <input type="number"
-               id="costoIngredientes"
-               placeholder="Costo total ingredientes">
-
-        <input type="number"
-               id="cantidadMarcianos"
-               placeholder="Cantidad de marcianos">
-
-        <button onclick="calcularCostos()">
-            Calcular
-        </button>
-
-        <div id="resultado"></div>
-
+        <h2>🧮 Costeo automático y precio recomendado</h2>
+        <p class="hint">El costo unitario se calcula con los insumos consumidos en producción.</p>
+        <div class="form-grid">
+            <label for="recargoPrecio">Recargo sobre costo (%)</label>
+            <input type="number" id="recargoPrecio" min="0" max="1000" step="5" value="150" oninput="renderCostos()">
+        </div>
+        <table>
+            <thead><tr><th>Sabor</th><th>Costo unitario</th><th>Precio recomendado</th><th>Ganancia estimada</th></tr></thead>
+            <tbody id="tablaCostos"></tbody>
+        </table>
     </section>
 
     <section class="card">

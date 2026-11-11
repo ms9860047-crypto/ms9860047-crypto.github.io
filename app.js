@@ -28,7 +28,8 @@ let inventario = comoLista("inventario").map(item => ({
     nombre: String(item.nombre || ""),
     cantidad: Number(item.cantidad) || 0,
     unidad: item.unidad || "unidad",
-    precio: Number(item.precio) || 0
+    precio: Number(item.precio) || 0,
+    stockMinimo: Number(item.stockMinimo) || 0
 }));
 
 let sabores = comoLista("sabores").map(sabor =>
@@ -178,6 +179,7 @@ function renderInventario() {
             <td>${item.cantidad.toFixed(2)}</td>
             <td>${escapar(item.unidad)}</td>
             <td>${dinero(item.precio)}</td>
+            <td>${item.stockMinimo.toFixed(2)} ${escapar(item.unidad)}</td>
             <td class="actions">
                 <button class="small-button" onclick="editarInsumo('${item.id}')">Editar</button>
                 <button class="small-button danger-button" onclick="eliminarInsumo('${item.id}')">Eliminar</button>
@@ -336,9 +338,70 @@ function renderGanancias() {
     }).join("");
 }
 
+function renderDashboard() {
+    const hoy = fechaHoy();
+    const ventasHoy = ventas.filter(item => item.fecha === hoy);
+    const gastosHoy = gastos.filter(item => item.fecha === hoy);
+    const ingresos = ventasHoy.reduce((total, item) => total + item.ingreso, 0);
+    const costos = ventasHoy.reduce((total, item) => total + item.costo, 0);
+    const gastosDelDia = gastosHoy.reduce((total, item) => total + item.monto, 0);
+    const stockTerminado = sabores.reduce((total, sabor) =>
+        total + unidadesProducidas(sabor) - unidadesVendidas(sabor), 0
+    );
+    const valorInventario = inventario.reduce((total, item) => total + item.precio, 0);
+    const tarjetas = [
+        { titulo: "Producto terminado", valor: `${stockTerminado} unidades` },
+        { titulo: "Ventas de hoy", valor: dinero(ingresos) },
+        { titulo: "Ganancia neta hoy", valor: dinero(ingresos - costos - gastosDelDia) },
+        { titulo: "Valor del inventario", valor: dinero(valorInventario) }
+    ];
+    document.getElementById("dashboardInfo").innerHTML = tarjetas.map(tarjeta => `
+        <article class="metric-item">
+            <p>${tarjeta.titulo}</p>
+            <strong>${tarjeta.valor}</strong>
+        </article>
+    `).join("");
+}
+
+function renderAlertasInventario() {
+    const alertas = inventario.filter(item => item.cantidad <= item.stockMinimo);
+    const contenedor = document.getElementById("alertasInventario");
+    if (!alertas.length) {
+        contenedor.innerHTML = '<p class="all-clear">Inventario dentro de los mínimos configurados.</p>';
+        return;
+    }
+    contenedor.innerHTML = alertas.map(item => `
+        <p class="alert-item">
+            <strong>${escapar(item.nombre)}</strong>: quedan ${item.cantidad.toFixed(2)} ${escapar(item.unidad)}
+            (mínimo ${item.stockMinimo.toFixed(2)} ${escapar(item.unidad)})
+        </p>
+    `).join("");
+}
+
+function renderCostos() {
+    const recargo = Math.max(0, Number(document.getElementById("recargoPrecio").value) || 0);
+    const saboresConProduccion = sabores.filter(sabor => unidadesProducidas(sabor) > 0);
+    document.getElementById("tablaCostos").innerHTML = saboresConProduccion.length
+        ? saboresConProduccion.map(sabor => {
+            const costo = costoPromedioProduccion(sabor);
+            const precio = costo * (1 + recargo / 100);
+            return `
+                <tr>
+                    <td>${escapar(sabor)}</td>
+                    <td>${dinero(costo)}</td>
+                    <td>${dinero(precio)}</td>
+                    <td>${dinero(precio - costo)}</td>
+                </tr>
+            `;
+        }).join("")
+        : '<tr><td colspan="4">Registra producción para calcular costos y precios.</td></tr>';
+}
+
 function renderTodo() {
     actualizarSelectores();
     renderInventario();
+    renderDashboard();
+    renderAlertasInventario();
     renderSabores();
     renderRecetas();
     renderStockProductos();
@@ -346,11 +409,12 @@ function renderTodo() {
     renderVentas();
     renderGastos();
     renderGanancias();
+    renderCostos();
 }
 
 function cancelarEdicion(tipo) {
     const campos = {
-        inventario: ["nombreInsumo", "cantidadInsumo", "unidadInsumo", "precioInsumo"],
+        inventario: ["nombreInsumo", "cantidadInsumo", "unidadInsumo", "precioInsumo", "stockMinimo"],
         recetas: ["saborReceta", "insumoReceta", "cantidadReceta"],
         producciones: ["saborProduccion", "cantidadProducida", "fechaProduccion"],
         ventas: ["saborVenta", "ventaCantidad", "ventaPrecio", "fechaVenta"],
@@ -394,12 +458,13 @@ function guardarInsumo() {
     const cantidad = Number(document.getElementById("cantidadInsumo").value);
     const unidad = document.getElementById("unidadInsumo").value.trim() || "unidad";
     const precio = Number(document.getElementById("precioInsumo").value);
-    if (!nombre || cantidad <= 0 || !Number.isFinite(precio) || precio < 0) {
+    const stockMinimo = Number(document.getElementById("stockMinimo").value || 0);
+    if (!nombre || cantidad <= 0 || !Number.isFinite(precio) || precio < 0 || !Number.isFinite(stockMinimo) || stockMinimo < 0) {
         alert("Completa el nombre, una cantidad mayor a cero y un costo válido.");
         return;
     }
 
-    const datos = { nombre, cantidad, unidad, precio };
+    const datos = { nombre, cantidad, unidad, precio, stockMinimo };
     const existente = inventario.find(item => item.id === ediciones.inventario);
     if (existente) Object.assign(existente, datos);
     else inventario.push({ id: crearId(), ...datos });
@@ -415,7 +480,8 @@ function editarInsumo(id) {
         nombreInsumo: item.nombre,
         cantidadInsumo: item.cantidad,
         unidadInsumo: item.unidad,
-        precioInsumo: item.precio
+        precioInsumo: item.precio,
+        stockMinimo: item.stockMinimo
     });
 }
 
@@ -720,23 +786,50 @@ function eliminarGasto(id) {
     renderTodo();
 }
 
-function calcularCostos() {
-    const ingredientes = Number(document.getElementById("costoIngredientes").value);
-    const cantidad = Number(document.getElementById("cantidadMarcianos").value);
-    if (cantidad <= 0) {
-        document.getElementById("resultado").textContent = "La cantidad debe ser mayor a cero.";
-        return;
-    }
-    const costoTotal = ingredientes;
-    const costoUnitario = costoTotal / cantidad;
-    const precio = costoUnitario * 2.5;
-    document.getElementById("resultado").innerHTML = `
-        <h3>Resultado</h3>
-        <p>Costo total: ${dinero(costoTotal)}</p>
-        <p>Costo unitario: ${dinero(costoUnitario)}</p>
-        <p>Precio recomendado: ${dinero(precio)}</p>
-        <p>Ganancia por unidad: ${dinero(precio - costoUnitario)}</p>
-    `;
+function exportarRespaldo() {
+    const respaldo = {
+        aplicacion: "MiJen Frozen",
+        version: 1,
+        exportadoEn: new Date().toISOString(),
+        data: estadoActualNube()
+    };
+    const archivo = new Blob([JSON.stringify(respaldo, null, 2)], { type: "application/json" });
+    const enlace = document.createElement("a");
+    const url = URL.createObjectURL(archivo);
+    enlace.href = url;
+    enlace.download = `mijen-frozen-respaldo-${fechaHoy()}.json`;
+    enlace.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    document.getElementById("estadoRespaldo").textContent = "Respaldo descargado.";
+}
+
+function importarRespaldo(evento) {
+    const archivo = evento.target.files && evento.target.files[0];
+    if (!archivo) return;
+    const lector = new FileReader();
+    lector.onload = () => {
+        try {
+            const respaldo = JSON.parse(lector.result);
+            const datos = respaldo.data || respaldo;
+            const secciones = ["inventario", "sabores", "recetas", "producciones", "ventas", "gastos"];
+            if (!datos || !secciones.every(seccion => Array.isArray(datos[seccion]))) {
+                throw new Error("El archivo no contiene un respaldo válido de MiJen Frozen.");
+            }
+            if (!confirm("Importar reemplazará todos los datos actuales. ¿Continuar?")) return;
+            aplicarEstadoNube(datos);
+            guardarDatos();
+            document.getElementById("estadoRespaldo").textContent = "Respaldo importado y guardado.";
+        } catch (error) {
+            document.getElementById("estadoRespaldo").textContent = error.message || "No se pudo leer el respaldo.";
+        } finally {
+            evento.target.value = "";
+        }
+    };
+    lector.onerror = () => {
+        document.getElementById("estadoRespaldo").textContent = "No se pudo leer el archivo.";
+        evento.target.value = "";
+    };
+    lector.readAsText(archivo);
 }
 
 function actualizarEstadoNube(mensaje) {
@@ -763,7 +856,8 @@ function aplicarEstadoNube(estado) {
         nombre: String(item.nombre || ""),
         cantidad: Number(item.cantidad) || 0,
         unidad: item.unidad || "unidad",
-        precio: Number(item.precio) || 0
+        precio: Number(item.precio) || 0,
+        stockMinimo: Number(item.stockMinimo) || 0
     }));
     sabores = (Array.isArray(datos.sabores) ? datos.sabores : []).map(sabor =>
         typeof sabor === "string" ? sabor : String(sabor.nombre || "")

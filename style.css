@@ -78,6 +78,70 @@ select{
     display:none;
 }
 
+.metric-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    gap:10px;
+}
+
+.metric-item{
+    padding:12px;
+    border-top:3px solid #0099ff;
+    background:#f4f7fc;
+}
+
+.metric-item p{
+    margin-bottom:8px;
+    color:#526174;
+}
+
+.metric-item strong{
+    display:block;
+    font-size:1.2rem;
+}
+
+.dashboard-alerts{
+    margin-top:18px;
+}
+
+.alerts-list{
+    display:grid;
+    gap:6px;
+    margin-top:8px;
+}
+
+.alert-item{
+    margin:0;
+    padding:9px 12px;
+    border-left:4px solid #b42318;
+    background:#fef3f2;
+}
+
+.all-clear{
+    margin:0;
+    padding:9px 12px;
+    color:#087443;
+    background:#e8fff0;
+}
+
+.file-button{
+    display:flex;
+    flex:1;
+    align-items:center;
+    justify-content:center;
+    margin-top:10px;
+    padding:12px;
+    border-radius:8px;
+    color:white;
+    background:#526174;
+    cursor:pointer;
+    text-align:center;
+}
+
+.file-button:hover{
+    background:#3f4d5e;
+}
+
 button{
     width:100%;
     background:#0099ff;
