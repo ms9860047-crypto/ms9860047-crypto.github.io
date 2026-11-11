@@ -89,6 +89,8 @@ let clienteNube = null;
 let usuarioNube = null;
 let datosNubeListos = false;
 let canalNube = null;
+let usuarioConexionNubeId = null;
+let promesaConexionNube = null;
 let ultimaActualizacionNube = null;
 let colaEscriturasNube = Promise.resolve();
 
@@ -901,6 +903,21 @@ function aplicarEstadoNube(estado) {
 
 async function conectarCuentaNube(usuario) {
     if (usuarioNube && usuarioNube.id === usuario.id && canalNube) return;
+    if (usuarioConexionNubeId === usuario.id && promesaConexionNube) return promesaConexionNube;
+    usuarioConexionNubeId = usuario.id;
+    const conexion = cargarCuentaNube(usuario);
+    promesaConexionNube = conexion;
+    try {
+        return await conexion;
+    } finally {
+        if (promesaConexionNube === conexion) {
+            usuarioConexionNubeId = null;
+            promesaConexionNube = null;
+        }
+    }
+}
+
+async function cargarCuentaNube(usuario) {
     if (canalNube) await clienteNube.removeChannel(canalNube);
     usuarioNube = usuario;
     datosNubeListos = false;
