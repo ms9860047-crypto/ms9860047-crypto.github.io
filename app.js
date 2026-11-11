@@ -87,6 +87,7 @@ const ediciones = {
 
 let clienteNube = null;
 let usuarioNube = null;
+let datosNubeListos = false;
 let canalNube = null;
 let ultimaActualizacionNube = null;
 let colaEscriturasNube = Promise.resolve();
@@ -842,6 +843,9 @@ function actualizarControlesNube() {
     const configurada = Boolean(configuracion.url && configuracion.publishableKey);
     document.getElementById("formularioNube").hidden = !configurada || Boolean(usuarioNube);
     document.getElementById("cerrarSesionNubeBtn").hidden = !usuarioNube;
+    document.querySelectorAll(".requires-account").forEach(seccion => {
+        seccion.hidden = !configurada || !usuarioNube || !datosNubeListos;
+    });
 }
 
 function datosVaciosNube() {
@@ -899,6 +903,7 @@ async function conectarCuentaNube(usuario) {
     if (usuarioNube && usuarioNube.id === usuario.id && canalNube) return;
     if (canalNube) await clienteNube.removeChannel(canalNube);
     usuarioNube = usuario;
+    datosNubeListos = false;
     actualizarControlesNube();
     actualizarEstadoNube("Cargando datos de tu cuenta...");
 
@@ -932,6 +937,8 @@ async function conectarCuentaNube(usuario) {
         ultimaActualizacionNube = nuevaFila.updated_at;
     }
 
+    datosNubeListos = true;
+    actualizarControlesNube();
     localStorage.setItem("mijen_cloud_owner", usuario.id);
     canalNube = clienteNube
         .channel(`mijen-state-${usuario.id}`)
@@ -1009,6 +1016,7 @@ async function inicializarNube() {
             if (canalNube) clienteNube.removeChannel(canalNube);
             canalNube = null;
             usuarioNube = null;
+            datosNubeListos = false;
             actualizarControlesNube();
             actualizarEstadoNube("Sesión cerrada. Los cambios nuevos solo se guardan en este dispositivo.");
         }

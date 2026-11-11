@@ -43,7 +43,7 @@
         <p class="hint">Usa la misma cuenta en todos tus dispositivos para ver los mismos datos.</p>
     </section>
 
-    <section class="card dashboard-card wide-card">
+    <section class="card dashboard-card wide-card requires-account" hidden>
         <h2>📊 Dashboard</h2>
         <div id="dashboardInfo" class="metric-grid"></div>
         <div class="dashboard-alerts">
@@ -52,7 +52,7 @@
         </div>
     </section>
 
-    <section class="card backup-card wide-card">
+    <section class="card backup-card wide-card requires-account" hidden>
         <h2>💾 Respaldo de datos</h2>
         <p class="hint">Descarga una copia JSON o importa una copia para reemplazar los datos actuales.</p>
         <div class="form-actions">
@@ -63,7 +63,7 @@
         <p id="estadoRespaldo" class="hint" aria-live="polite"></p>
     </section>
 
-    <section class="card inventory-card">
+    <section class="card inventory-card requires-account" hidden>
         <h2>📦 Inventario</h2>
 
         <div class="form-grid">
@@ -94,7 +94,7 @@
         </table>
     </section>
 
-    <section class="card expenses-card">
+    <section class="card expenses-card requires-account" hidden>
         <h2>🧾 Gastos operativos</h2>
         <div class="form-grid">
             <input type="text" id="nombreGasto" placeholder="Concepto (luz, agua, transporte...)">
@@ -111,7 +111,7 @@
         </table>
     </section>
 
-    <section class="card flavors-card">
+    <section class="card flavors-card requires-account" hidden>
         <h2>🍓 Gestión de Sabores</h2>
 
         <input type="text" id="nuevoSabor" placeholder="Nombre del sabor">
@@ -121,7 +121,7 @@
         <ul id="listaSabores"></ul>
     </section>
 
-    <section class="card recipes-card">
+    <section class="card recipes-card requires-account" hidden>
         <h2>🧪 Recetas por unidad</h2>
         <p class="hint">Indica cuánto de cada insumo se usa para preparar un marciano. Usa la misma unidad del inventario.</p>
         <div class="form-grid">
@@ -139,7 +139,7 @@
         </table>
     </section>
 
-    <section class="card production-card wide-card">
+    <section class="card production-card wide-card requires-account" hidden>
         <h2>🏭 Producción</h2>
         <div class="form-grid">
             <select id="saborProduccion" aria-label="Sabor producido"></select>
@@ -162,7 +162,7 @@
         </table>
     </section>
 
-    <section class="card pricing-card">
+    <section class="card pricing-card requires-account" hidden>
         <h2>🧮 Costeo automático y precio recomendado</h2>
         <p class="hint">El costo unitario se calcula con los insumos consumidos en producción.</p>
         <div class="form-grid">
@@ -175,7 +175,7 @@
         </table>
     </section>
 
-    <section class="card sales-card">
+    <section class="card sales-card requires-account" hidden>
         <h2>💰 Registro de Ventas</h2>
         <div class="form-grid">
             <select id="saborVenta" aria-label="Sabor vendido"></select>
@@ -194,7 +194,7 @@
         </table>
     </section>
 
-    <section class="card profit-card wide-card">
+    <section class="card profit-card wide-card requires-account" hidden>
         <h2>📈 Ganancia neta</h2>
         <p class="hint">Ganancia = ventas - costo de los productos vendidos - gastos operativos registrados.</p>
         <div id="gananciasInfo" class="report-grid"></div>
